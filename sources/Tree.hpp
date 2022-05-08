@@ -95,6 +95,23 @@ public:
     // inner class and methods that return instances of iterators
     // which perform non-binary traversals
     //-------------------------------------------------------------------
+    class level_order_iterator{
+    private:
+        Node* ptr_to_curr_node;
+    public:
+    }; // END OF CLASS level_order_iterator
+
+    class reverse_level_order_iterator{
+    private:
+        Node* ptr_to_curr_node;
+    public:
+    }; // END OF CLASS reverse_level_order_iterator
+
+    class preorder_iterator{
+    private:
+        Node* ptr_to_curr_node;
+    public:
+    }; // END OF CLASS preorder_iterator
 
 
 };
