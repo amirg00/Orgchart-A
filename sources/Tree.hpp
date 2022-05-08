@@ -1,5 +1,5 @@
 /**
- * A template Tree class.
+ * A template Non-Binary-Tree class.
  * Implemented as a linked list.
  *
  * @author Amir Gillette
