@@ -55,7 +55,8 @@ private:
         Node* parent;           /* Parent's node*/
         Node* sub;              /* Current node's sub-entities list (points to first sub-entity)*/
         Node* next_sib;         /* Sub-entities' siblings list*/
-        Node(const T& val, Node* node, Node* parNode, Node* sib): info(val), sub(node), parent(parNode), next_sib(sib){}
+        Node* next;             /* Next property for iterators*/
+        Node(const T& val, Node* node, Node* parNode, Node* sib): info(val), sub(node), parent(parNode), next_sib(sib), next(nullptr) {}
     };
 
     // Fields
@@ -110,7 +111,22 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     Node* reverse_order(){
+        Node* levelOrderList = level_order();
+        reverse_linkedList(levelOrderList);
+        return levelOrderList;
+    }
 
+    // Function reverse the given linked list.
+    void reverse_linkedList(Node* head){
+        Node* prev, curr, next;
+        prev = next = nullptr;
+
+        while (head->next_sib != nullptr){
+            curr = head;
+            head = head->next_sib;
+            curr->next_sib = prev;
+            prev = curr;
+        }
     }
 
     // Preorder traversal: performs the preorder traversal
@@ -118,7 +134,15 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     Node* preorder(){
+        rec_preorder(root, root);
+        return root;
+    }
 
+    void rec_preorder(Node* lst, Node* ptr){
+        if (ptr == nullptr) return;
+        lst->next = ptr;
+        rec_preorder(lst->next, ptr->sub);
+        rec_preorder(lst->next, ptr->next_sib);
     }
 
     //-------------------------------------------------------------------
