@@ -59,7 +59,7 @@ private:
     };
 
     // Fields
-    Node* root;                 /* Root field*/
+    Node* root;                 /* Tree's root field*/
 
     // Method finds node by value
     Node* search(const T& val){
@@ -82,6 +82,13 @@ private:
         }
         return nullptr;
     }
+    //-------------------------------------------------------------------
+    // Tree traversals related code:
+    // Following methods perform non-binary tree's traversals,
+    // then return a linked list using Node class's next_sib property.
+    // Those methods are auxiliary methods for the iterators code section
+    //-------------------------------------------------------------------
+
     // Auxiliary function for the class's destructor.
     // Postorder traversal: clears the nodes.
     void clear_via_postorder(Node* ptr) {
@@ -91,6 +98,30 @@ private:
         clear_via_postorder(ptr->next_sib);
     }
 
+    // Level-order traversal: the inorder traversal in a non-binary tree.
+    // Return in the end a linked list for iterations.
+    // The returned pointer will be pointer to the head of the linked list.
+    Node* level_order(){
+
+    }
+
+    // Reverse-order traversal: the reverse oder of the
+    // level-order traversal which can be shown above.
+    // Return in the end a linked list for iterations.
+    // The returned pointer will be pointer to the head of the linked list.
+    Node* reverse_order(){
+
+    }
+
+    // Preorder traversal: performs the preorder traversal
+    // for a non-binary tree.
+    // Return in the end a linked list for iterations.
+    // The returned pointer will be pointer to the head of the linked list.
+    Node* preorder(){
+
+    }
+
+    //-------------------------------------------------------------------
 public:
     //-------------------------------------------------------------------
     // iterator related code:
@@ -228,6 +259,6 @@ public:
             return ptr_to_curr_node != rhs.ptr_to_curr_node;
         }
     }; // END OF CLASS preorder_iterator
-
+    //--------------------------------------------------------------------
 
 };
