@@ -1,9 +1,11 @@
 /**
- * A template Non-Binary-Tree class.
- * Implemented as a linked list.
+ * <--------- CLASS DESCRIPTION ---------->
+ * A template Tree class.
+ * Implemented as a doubly linked list.
  *
  * @author Amir Gillette
  * @since 6-5-22
+ * -----------------------------------------
  */
 
 #pragma once
@@ -99,18 +101,132 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
+        explicit level_order_iterator(Node* ptr = nullptr)
+        : ptr_to_curr_node(ptr) {
+        }
+
+        // Note that the method is const as this operator does not
+        // allow changing of the iterator.
+        // Note that it returns T& as it allows changing what it points to.
+        // A const_iterator class will return const T&
+        // and the method will still be const
+        T& operator*() const {
+            return ptr_to_curr_node->info;
+        }
+
+        T* operator->() const {
+            return &(ptr_to_curr_node->info);
+        }
+
+        // Prefix increment: ++iterator;
+        level_order_iterator& operator++() {
+            //++pointer_to_current_node;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return *this;
+        }
+
+        // Postfix increment: ++iterator;
+        const level_order_iterator operator++(int) {
+            level_order_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return tmp;
+        }
+
+        bool operator==(const level_order_iterator& rhs) const {
+            return ptr_to_curr_node == rhs.ptr_to_curr_node;
+        }
+
+        bool operator!=(const level_order_iterator& rhs) const {
+            return ptr_to_curr_node != rhs.ptr_to_curr_node;
+        }
     }; // END OF CLASS level_order_iterator
 
     class reverse_level_order_iterator{
     private:
         Node* ptr_to_curr_node;
     public:
+        explicit reverse_level_order_iterator(Node* ptr = nullptr)
+        : ptr_to_curr_node(ptr) {
+        }
+
+        // Note that the method is const as this operator does not
+        // allow changing of the iterator.
+        // Note that it returns T& as it allows changing what it points to.
+        // A const_iterator class will return const T&
+        // and the method will still be const
+        T& operator*() const {
+            return ptr_to_curr_node->info;
+        }
+
+        T* operator->() const {
+            return &(ptr_to_curr_node->info);
+        }
+
+        // Prefix increment: ++iterator;
+        reverse_level_order_iterator& operator++() {
+            //++pointer_to_current_node;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return *this;
+        }
+
+        // Postfix increment: ++iterator;
+        const reverse_level_order_iterator operator++(int) {
+            reverse_level_order_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return tmp;
+        }
+
+        bool operator==(const reverse_level_order_iterator& rhs) const {
+            return ptr_to_curr_node == rhs.ptr_to_curr_node;
+        }
+
+        bool operator!=(const reverse_level_order_iterator& rhs) const {
+            return ptr_to_curr_node != rhs.ptr_to_curr_node;
+        }
     }; // END OF CLASS reverse_level_order_iterator
 
     class preorder_iterator{
     private:
         Node* ptr_to_curr_node;
     public:
+        explicit preorder_iterator(Node* ptr = nullptr)
+        : ptr_to_curr_node(ptr) {
+        }
+
+        // Note that the method is const as this operator does not
+        // allow changing of the iterator.
+        // Note that it returns T& as it allows changing what it points to.
+        // A const_iterator class will return const T&
+        // and the method will still be const
+        T& operator*() const {
+            return ptr_to_curr_node->info;
+        }
+
+        T* operator->() const {
+            return &(ptr_to_curr_node->info);
+        }
+
+        // Prefix increment: ++iterator;
+        preorder_iterator& operator++() {
+            //++pointer_to_current_node;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return *this;
+        }
+
+        // Postfix increment: ++iterator;
+        const preorder_iterator operator++(int) {
+            preorder_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            return tmp;
+        }
+
+        bool operator==(const preorder_iterator& rhs) const {
+            return ptr_to_curr_node == rhs.ptr_to_curr_node;
+        }
+
+        bool operator!=(const preorder_iterator& rhs) const {
+            return ptr_to_curr_node != rhs.ptr_to_curr_node;
+        }
     }; // END OF CLASS preorder_iterator
 
 
