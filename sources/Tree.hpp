@@ -113,26 +113,28 @@ private:
         clear_via_postorder(ptr->next_sib);
     }
 
-    // Level-order traversal: the inorder traversal in a non-binary tree.
-    // Return in the end a linked list for iterations.
-    // The returned pointer will be pointer to the head of the linked list.
-    static Node* level_order(Node* root){
-        queue<Node*> Q;
-        Q.push(root);
-        while(!Q.empty()){
-            Node* curr = Q.front();
-            curr->next = curr;
-            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
-                Q.push(child);
-            }
-        }
-    }
+    //    // Level-order traversal: the inorder traversal in a non-binary tree.
+    //    // Return in the end a linked list for iterations.
+    //    // The returned pointer will be pointer to the head of the linked list.
+    //    static Node* level_order(Node* root){
+    //        if (root == nullptr) return nullptr;
+    //        queue<Node*> Q;
+    //        Q.push(root);
+    //        while(!Q.empty()){
+    //            Node* curr = Q.front();
+    //            curr->next = curr;
+    //            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+    //                Q.push(child);
+    //            }
+    //        }
+    //    }
 
     // Reverse-order traversal: the reverse oder of the
     // level-order traversal which can be shown above.
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     static Node* reverse_order(Node* root){
+        if (root == nullptr) return nullptr;
         Node* levelOrderList = level_order(root);
         reverse_linkedList(levelOrderList);
         return levelOrderList;
@@ -156,6 +158,7 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     static Node* preorder(Node* root){
+        if (root == nullptr) return nullptr;
         rec_preorder(root, root);
         return root;
     }
@@ -176,9 +179,35 @@ public:
     class level_order_iterator{
     private:
         Node* ptr_to_curr_node;
+        Node* root;
+        // Level-order traversal: the inorder traversal in a non-binary tree.
+        // Return in the end a linked list for iterations.
+        // The returned pointer will be pointer to the head of the linked list.
+        Node* level_order(){
+            if (root == nullptr) return nullptr;
+
+            Node* it = root;
+            //if (root != nullptr) cout << root->info << endl;
+            queue<Node*> Q;
+            Q.push(root);
+            //cout << root << endl;
+            while(!Q.empty()){
+                Node* curr = Q.front();
+                Q.pop();
+                it->next = curr;
+                it = it->next;
+                //if (curr!= nullptr) cout << curr->info << " ";
+                for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                    Q.push(child);
+                }
+            }
+
+            return root;
+        }
     public:
         explicit level_order_iterator(Node* root)
-        : ptr_to_curr_node(level_order(root)) {
+        : root(root) {
+            ptr_to_curr_node = level_order();
         }
 
         // Note that the method is const as this operator does not
@@ -201,7 +230,7 @@ public:
             return *this;
         }
 
-        // Postfix increment: ++iterator;
+        // Postfix increment: iterator++;
         const level_order_iterator operator++(int) {
             level_order_iterator tmp = *this;
             ptr_to_curr_node = ptr_to_curr_node->next;
@@ -304,7 +333,6 @@ public:
             return ptr_to_curr_node != rhs.ptr_to_curr_node;
         }
     }; // END OF CLASS preorder_iterator
-
 
     level_order_iterator begin_level_order(){
         return level_order_iterator{root};
