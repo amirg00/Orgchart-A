@@ -19,7 +19,7 @@ public:
     // Performs postorder traversal in order to free
     // all the elements without losing a certain element.
     ~Tree(){
-        postorder(root);
+        clear_via_postorder(root);
     }
 
     // Method adds the root with a given value
@@ -84,11 +84,11 @@ private:
     }
     // Auxiliary function for the class's destructor.
     // Postorder traversal: clears the nodes.
-    void postorder(Node* ptr) {
+    void clear_via_postorder(Node* ptr) {
         if (ptr == nullptr) return;
-        postorder(ptr->sub);
+        clear_via_postorder(ptr->sub);
         delete ptr; // deletes visited node
-        postorder(ptr->next_sib);
+        clear_via_postorder(ptr->next_sib);
     }
 
 public:
