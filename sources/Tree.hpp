@@ -11,6 +11,7 @@
 #pragma once
 #include "queue"
 using std::queue;
+using std::cout; using std::endl; // For debugging - remove it!
 
 template <typename T>
 class Tree{
@@ -26,28 +27,37 @@ public:
 
     // Method adds the root with a given value
     void add_root(const T& val) {
+        cout << val << "| " << endl;
         root = new Node(val, nullptr, nullptr, nullptr);
+        cout << "Expected Address: " << &(*root) << endl;
     }
 
     // Method adds the sub element under the super given element.
     void add_sub(const T& super, const T& sub){
         Node* super_ref = search(super);
-        Node* subNode = new Node(sub, super_ref, nullptr, nullptr);
+        cout << "Actual Address: " << &(*super_ref) << ", Sub data: " << sub << endl;
+        Node* subNode = new Node(sub, nullptr, super_ref, nullptr);
         Node* sub_list = super_ref->sub;
-
+        if (sub_list!= nullptr){
+            cout << "Sub data: " << sub_list->info << endl;
+        }
         // New sub element
         if (sub_list == nullptr){
-            sub_list->next_sib = subNode;
+            cout << "@ERROR" << endl;
+            //sub_list->next_sib = subNode;
             super_ref->sub = subNode;
+            cout << *(&super_ref->sub) << endl;
             return;
         }
 
         // O.W
+        cout << "Answer:: ";
         while(sub_list->next_sib != nullptr){
+            cout << sub_list->info << " ";
             sub_list = sub_list->next_sib;
         }
+        cout << endl;
         sub_list->next_sib = subNode;
-        super_ref->sub = subNode;
     }
 
 private:
@@ -72,6 +82,7 @@ private:
     // Auxiliary recursive function for search
     Node* search(Node* ptr, const T& val){
         if (ptr->info == val){ /* Data corresponds the node's data*/
+            cout << "Data GOT: " << ptr->info << ", Address: "<< &(*ptr)<< endl;
             return ptr;
         }
         else{
