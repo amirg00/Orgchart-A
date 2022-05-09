@@ -9,6 +9,8 @@
  */
 
 #pragma once
+#include "queue"
+using std::queue;
 
 template <typename T>
 class Tree{
@@ -66,6 +68,7 @@ private:
     Node* search(const T& val){
         return search(root, val);
     }
+
     // Auxiliary recursive function for search
     Node* search(Node* ptr, const T& val){
         if (ptr->info == val){ /* Data corresponds the node's data*/
@@ -102,22 +105,30 @@ private:
     // Level-order traversal: the inorder traversal in a non-binary tree.
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
-    Node* level_order(){
-
+    static Node* level_order(Node* root){
+        queue<Node*> Q;
+        Q.push(root);
+        while(!Q.empty()){
+            Node* curr = Q.front();
+            curr->next = curr;
+            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                Q.push(child);
+            }
+        }
     }
 
     // Reverse-order traversal: the reverse oder of the
     // level-order traversal which can be shown above.
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
-    Node* reverse_order(){
-        Node* levelOrderList = level_order();
+    static Node* reverse_order(Node* root){
+        Node* levelOrderList = level_order(root);
         reverse_linkedList(levelOrderList);
         return levelOrderList;
     }
 
     // Function reverse the given linked list.
-    void reverse_linkedList(Node* head){
+    static void reverse_linkedList(Node* head){
         Node* prev, curr, next;
         prev = next = nullptr;
 
@@ -133,18 +144,17 @@ private:
     // for a non-binary tree.
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
-    Node* preorder(){
+    static Node* preorder(Node* root){
         rec_preorder(root, root);
         return root;
     }
 
-    void rec_preorder(Node* lst, Node* ptr){
+    static void rec_preorder(Node* lst, Node* ptr){
         if (ptr == nullptr) return;
         lst->next = ptr;
         rec_preorder(lst->next, ptr->sub);
         rec_preorder(lst->next, ptr->next_sib);
     }
-
     //-------------------------------------------------------------------
 public:
     //-------------------------------------------------------------------
@@ -156,8 +166,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit level_order_iterator(Node* ptr = nullptr)
-        : ptr_to_curr_node(ptr) {
+        explicit level_order_iterator(Node* root)
+        : ptr_to_curr_node(level_order(root)) {
         }
 
         // Note that the method is const as this operator does not
@@ -176,14 +186,14 @@ public:
         // Prefix increment: ++iterator;
         level_order_iterator& operator++() {
             //++pointer_to_current_node;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
 
         // Postfix increment: ++iterator;
         const level_order_iterator operator++(int) {
             level_order_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return tmp;
         }
 
@@ -200,8 +210,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit reverse_level_order_iterator(Node* ptr = nullptr)
-        : ptr_to_curr_node(ptr) {
+        explicit reverse_level_order_iterator(Node* root)
+        : ptr_to_curr_node(reverse_order(root)) {
         }
 
         // Note that the method is const as this operator does not
@@ -220,14 +230,14 @@ public:
         // Prefix increment: ++iterator;
         reverse_level_order_iterator& operator++() {
             //++pointer_to_current_node;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
 
         // Postfix increment: ++iterator;
         const reverse_level_order_iterator operator++(int) {
             reverse_level_order_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return tmp;
         }
 
@@ -244,8 +254,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit preorder_iterator(Node* ptr = nullptr)
-        : ptr_to_curr_node(ptr) {
+        explicit preorder_iterator(Node* root)
+        : ptr_to_curr_node(preorder(root)) {
         }
 
         // Note that the method is const as this operator does not
@@ -264,14 +274,14 @@ public:
         // Prefix increment: ++iterator;
         preorder_iterator& operator++() {
             //++pointer_to_current_node;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
 
         // Postfix increment: ++iterator;
         const preorder_iterator operator++(int) {
             preorder_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->m_next;
+            ptr_to_curr_node = ptr_to_curr_node->next;
             return tmp;
         }
 
@@ -283,6 +293,31 @@ public:
             return ptr_to_curr_node != rhs.ptr_to_curr_node;
         }
     }; // END OF CLASS preorder_iterator
+
+
+    level_order_iterator begin_level_order(){
+        return level_order_iterator{root};
+    }
+
+    level_order_iterator end_level_order(){
+        return level_order_iterator{nullptr};
+    }
+
+    reverse_level_order_iterator begin_reverse_order() {
+        return reverse_level_order_iterator{root};
+    }
+
+    reverse_level_order_iterator end_reverse_order() {
+        return reverse_level_order_iterator{nullptr};
+    }
+
+    preorder_iterator begin_preorder() {
+        return preorder_iterator{root};
+    }
+
+    preorder_iterator end_preorder() const {
+        return preorder_iterator{nullptr};
+    }
     //--------------------------------------------------------------------
 
 };
