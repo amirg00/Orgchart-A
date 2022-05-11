@@ -120,8 +120,8 @@ private:
     void clear_via_postorder(Node* ptr) {
         if (ptr == nullptr) return;
         clear_via_postorder(ptr->sub);
-        delete ptr; // deletes visited node
         clear_via_postorder(ptr->next_sib);
+        delete ptr; // deletes visited node
     }
 
     // Level-order traversal: the inorder traversal in a non-binary tree.
