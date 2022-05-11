@@ -1,9 +1,9 @@
 #include "OrgChart.hpp"
 
 
-//ostream& ariel::operator<<(ostream &os, const ariel::OrgChart &chart) {
-//
-//}
+ostream& ariel::operator<<(ostream &os, const ariel::OrgChart &chart) {
+    return os;
+}
 
 ariel::OrgChart& ariel::OrgChart::add_root(const string &root_val) {
     _chart.add_root(root_val);
