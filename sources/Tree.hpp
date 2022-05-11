@@ -28,41 +28,29 @@ public:
 
     // Method adds the root with a given value
     void add_root(const T& val) {
-        cout << val << "| " << endl;
         root = new Node(val, nullptr, nullptr, nullptr);
         _size++;
-        cout << "Expected Address: " << &(*root) << " Size: " << _size << endl;
     }
 
     // Method adds the sub element under the super given element.
     void add_sub(const T& super, const T& sub){
         Node* super_ref = search(super);
-        cout << "Actual Address: " << &(*super_ref) << ", Sub data: " << sub << endl;
         Node* subNode = new Node(sub, nullptr, super_ref, nullptr);
         Node* sub_list = super_ref->sub;
-        if (sub_list!= nullptr){
-            cout << "Sub data: " << sub_list->info << endl;
-        }
+
         // New sub element
         if (sub_list == nullptr){
-            cout << "@ERROR" << endl;
-            //sub_list->next_sib = subNode;
             super_ref->sub = subNode;
             _size++;
-            cout << *(&super_ref->sub) << " size: " << _size << endl;
             return;
         }
 
         // O.W
-        cout << "Answer:: ";
         while(sub_list->next_sib != nullptr){
-            cout << sub_list->info << " ";
             sub_list = sub_list->next_sib;
         }
-        cout << endl;
         sub_list->next_sib = subNode;
         _size++;
-        cout << " size: " << _size << endl;
     }
 
     // Returns tree's size.
@@ -93,7 +81,6 @@ private:
     // Auxiliary recursive function for search
     Node* search(Node* ptr, const T& val){
         if (ptr->info == val){ /* Data corresponds the node's data*/
-            cout << "Data GOT: " << ptr->info << ", Address: "<< &(*ptr)<< endl;
             return ptr;
         }
         else{
@@ -217,35 +204,11 @@ public:
     private:
         Node* ptr_to_curr_node;
         Node* root;
-        // Level-order traversal: the inorder traversal in a non-binary tree.
-        // Return in the end a linked list for iterations.
-        // The returned pointer will be pointer to the head of the linked list.
-        Node* level_order(){
-            if (root == nullptr) return nullptr;
-
-            Node* it = root;
-            //if (root != nullptr) cout << root->info << endl;
-            queue<Node*> Q;
-            Q.push(root);
-            //cout << root << endl;
-            while(!Q.empty()){
-                Node* curr = Q.front();
-                Q.pop();
-                it->next = curr;
-                it = it->next;
-                //if (curr!= nullptr) cout << curr->info << " ";
-                for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
-                    Q.push(child);
-                }
-            }
-
-            return root;
-        }
     public:
         explicit level_order_iterator(Node* root)
         : root(root) {
             clearLinkedList(root);
-            ptr_to_curr_node = level_order();
+            ptr_to_curr_node = level_order(root);
         }
 
         // Note that the method is const as this operator does not
@@ -400,5 +363,4 @@ public:
         return preorder_iterator{nullptr};
     }
     //--------------------------------------------------------------------
-
 };
