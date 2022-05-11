@@ -9,14 +9,15 @@
  */
 
 #pragma once
+#include "stack"
 #include "queue"
-using std::queue;
+using std::queue; using std::stack;
 using std::cout; using std::endl; // For debugging - remove it!
 
 template <typename T>
 class Tree{
 public:
-    Tree() : root(nullptr) {}
+    Tree() : root(nullptr), _size(0) {}
 
     // Destructor in order to tree class instance.
     // Performs postorder traversal in order to free
@@ -29,7 +30,8 @@ public:
     void add_root(const T& val) {
         cout << val << "| " << endl;
         root = new Node(val, nullptr, nullptr, nullptr);
-        cout << "Expected Address: " << &(*root) << endl;
+        _size++;
+        cout << "Expected Address: " << &(*root) << " Size: " << _size << endl;
     }
 
     // Method adds the sub element under the super given element.
@@ -46,7 +48,8 @@ public:
             cout << "@ERROR" << endl;
             //sub_list->next_sib = subNode;
             super_ref->sub = subNode;
-            cout << *(&super_ref->sub) << endl;
+            _size++;
+            cout << *(&super_ref->sub) << " size: " << _size << endl;
             return;
         }
 
@@ -58,6 +61,13 @@ public:
         }
         cout << endl;
         sub_list->next_sib = subNode;
+        _size++;
+        cout << " size: " << _size << endl;
+    }
+
+    // Returns tree's size.
+    int size(){
+        return _size;
     }
 
 private:
@@ -73,6 +83,7 @@ private:
 
     // Fields
     Node* root;                 /* Tree's root field*/
+    int _size;                  /* Tree's nodes amount*/
 
     // Method finds node by value
     Node* search(const T& val){
@@ -113,21 +124,25 @@ private:
         clear_via_postorder(ptr->next_sib);
     }
 
-    //    // Level-order traversal: the inorder traversal in a non-binary tree.
-    //    // Return in the end a linked list for iterations.
-    //    // The returned pointer will be pointer to the head of the linked list.
-    //    static Node* level_order(Node* root){
-    //        if (root == nullptr) return nullptr;
-    //        queue<Node*> Q;
-    //        Q.push(root);
-    //        while(!Q.empty()){
-    //            Node* curr = Q.front();
-    //            curr->next = curr;
-    //            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
-    //                Q.push(child);
-    //            }
-    //        }
-    //    }
+    // Level-order traversal: the inorder traversal in a non-binary tree.
+    // Return in the end a linked list for iterations.
+    // The returned pointer will be pointer to the head of the linked list.
+    static Node* level_order(Node* root){
+        if (root == nullptr) return nullptr;
+        Node* it = root;
+        queue<Node*> Q;
+        Q.push(root);
+        while(!Q.empty()){
+            Node* curr = Q.front();
+            Q.pop();
+            it->next = curr;
+            it = it->next;
+            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                Q.push(child);
+            }
+        }
+        return root;
+    }
 
     // Reverse-order traversal: the reverse oder of the
     // level-order traversal which can be shown above.
@@ -136,21 +151,31 @@ private:
     static Node* reverse_order(Node* root){
         if (root == nullptr) return nullptr;
         Node* levelOrderList = level_order(root);
-        reverse_linkedList(levelOrderList);
-        return levelOrderList;
+        Node* reversedList = reverse_linkedList(levelOrderList);
+        return reversedList;
     }
 
     // Function reverse the given linked list.
-    static void reverse_linkedList(Node* head){
-        Node* prev, curr, next;
-        prev = next = nullptr;
+    static Node* reverse_linkedList(Node* head){
+        if (head == nullptr) return nullptr;
+        Node* prev = nullptr; Node* curr = head; Node* next;
 
-        while (head->next_sib != nullptr){
-            curr = head;
-            head = head->next_sib;
-            curr->next_sib = prev;
+        while (curr != nullptr){
+            next = curr->next;
+            curr->next = prev;
             prev = curr;
+            curr = next;
         }
+        head = prev;
+        return head;
+    }
+
+    // Function clears the linked list.
+    // Sets all next pointers to nullptr.
+    static void clearLinkedList(Node* head){
+        if (head == nullptr) return;
+        clearLinkedList(head->next);
+        head->next = nullptr;
     }
 
     // Preorder traversal: performs the preorder traversal
@@ -159,16 +184,28 @@ private:
     // The returned pointer will be pointer to the head of the linked list.
     static Node* preorder(Node* root){
         if (root == nullptr) return nullptr;
-        rec_preorder(root, root);
+
+        Node* lst = root;
+        stack<Node*> tmpS; // temporary stack to reverse children
+        stack<Node*> stack;
+        stack.push(root);
+        while (!stack.empty()) {
+            Node* curr = stack.top();
+            stack.pop();
+            lst->next = curr;
+            lst = lst->next;
+            curr->next = nullptr;
+            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                tmpS.push(child);
+            }
+            while(!tmpS.empty()){
+                stack.push(tmpS.top());
+                tmpS.pop();
+            }
+        }
         return root;
     }
 
-    static void rec_preorder(Node* lst, Node* ptr){
-        if (ptr == nullptr) return;
-        lst->next = ptr;
-        rec_preorder(lst->next, ptr->sub);
-        rec_preorder(lst->next, ptr->next_sib);
-    }
     //-------------------------------------------------------------------
 public:
     //-------------------------------------------------------------------
@@ -207,6 +244,7 @@ public:
     public:
         explicit level_order_iterator(Node* root)
         : root(root) {
+            clearLinkedList(root);
             ptr_to_curr_node = level_order();
         }
 
@@ -249,9 +287,11 @@ public:
     class reverse_level_order_iterator{
     private:
         Node* ptr_to_curr_node;
+        Node* _root;
     public:
-        explicit reverse_level_order_iterator(Node* root)
-        : ptr_to_curr_node(reverse_order(root)) {
+        explicit reverse_level_order_iterator(Node* root) {
+            clearLinkedList(root);
+            ptr_to_curr_node = reverse_order(root);
         }
 
         // Note that the method is const as this operator does not
@@ -274,7 +314,7 @@ public:
             return *this;
         }
 
-        // Postfix increment: ++iterator;
+        // Postfix increment: iterator++;
         const reverse_level_order_iterator operator++(int) {
             reverse_level_order_iterator tmp = *this;
             ptr_to_curr_node = ptr_to_curr_node->next;
@@ -293,9 +333,11 @@ public:
     class preorder_iterator{
     private:
         Node* ptr_to_curr_node;
+        Node* _root;
     public:
-        explicit preorder_iterator(Node* root)
-        : ptr_to_curr_node(preorder(root)) {
+        explicit preorder_iterator(Node* root) {
+            clearLinkedList(root);
+            ptr_to_curr_node = preorder(root);
         }
 
         // Note that the method is const as this operator does not
@@ -354,7 +396,7 @@ public:
         return preorder_iterator{root};
     }
 
-    preorder_iterator end_preorder() const {
+    preorder_iterator end_preorder() {
         return preorder_iterator{nullptr};
     }
     //--------------------------------------------------------------------
