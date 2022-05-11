@@ -63,7 +63,7 @@ private:
     struct Node{
         T info;                 /* Node's value*/
         Node* parent;           /* Parent's node*/
-        Node* sub;              /* Current node's sub-entities list (points to first sub-entity)*/
+        Node* sub;              /* Current node's sub-entities list (points to first leftmost sub-entity)*/
         Node* next_sib;         /* Sub-entities' siblings list*/
         Node* next;             /* Next property for iterators*/
         Node(const T& val, Node* node, Node* parNode, Node* sib): info(val), sub(node), parent(parNode), next_sib(sib), next(nullptr) {}
