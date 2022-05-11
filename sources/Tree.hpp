@@ -11,8 +11,9 @@
 #pragma once
 #include "stack"
 #include "queue"
-using std::queue; using std::stack;
-using std::cout; using std::endl; // For debugging - remove it!
+#include "string"
+using std::queue; using std::stack; using std::string;
+//using std::cout; using std::endl; // For debugging - remove it!
 
 template <typename T>
 class Tree{
@@ -58,7 +59,42 @@ public:
         return _size;
     }
 
+    /* Returns a string in a reasonable format, represents the current tree.
+    For example:
+       CEO
+       |--------|--------|
+       CTO      CFO      COO
+       |                 |
+       VP_SW             VP_BI
+    */
+    // Note: method performs level order traversal
+    // in order to easily return a fair formatted string
+    // which represents the string.
+    string to_string() const {
+        if (root == nullptr) {return "";}
+        string tree_str = root->info + "\n";
+        Node* it = root;
+        queue<Node*> Q;
+        Q.push(root);
+        while(!Q.empty()){
+            Node* curr = Q.front();
+            Q.pop();
+            it->next = curr;
+            it = it->next;
+            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                tree_str += child->info + "\t";
+                Q.push(child);
+            }
+            tree_str+="\n";
+        }
+        return tree_str;
+    }
+
 private:
+    // Avoid copying
+    Tree (const Tree& rhs) = default;
+    Tree& operator=(const Tree& rhs) = default;
+
     // Node inner class
     struct Node{
         T info;                 /* Node's value*/
@@ -83,16 +119,16 @@ private:
         if (ptr->info == val){ /* Data corresponds the node's data*/
             return ptr;
         }
-        else{
-            Node* subList = ptr->sub;
-            while (subList != nullptr){
-                Node* currSub = search(subList, val);
-                if (currSub != nullptr){
-                    return currSub;
-                }
-                subList = subList->next_sib;
+
+        Node* subList = ptr->sub;
+        while (subList != nullptr){
+            Node* currSub = search(subList, val);
+            if (currSub != nullptr){
+                return currSub;
             }
+            subList = subList->next_sib;
         }
+
         return nullptr;
     }
     //-------------------------------------------------------------------
@@ -105,7 +141,7 @@ private:
     // Auxiliary function for the class's destructor.
     // Postorder traversal: clears the nodes.
     void clear_via_postorder(Node* ptr) {
-        if (ptr == nullptr) return;
+        if (ptr == nullptr) {return;}
         clear_via_postorder(ptr->sub);
         clear_via_postorder(ptr->next_sib);
         delete ptr; // deletes visited node
@@ -115,7 +151,7 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     static Node* level_order(Node* root){
-        if (root == nullptr) return nullptr;
+        if (root == nullptr) {return nullptr;}
         Node* it = root;
         queue<Node*> Q;
         Q.push(root);
@@ -136,7 +172,7 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     static Node* reverse_order(Node* root){
-        if (root == nullptr) return nullptr;
+        if (root == nullptr) {return nullptr;}
         Node* levelOrderList = level_order(root);
         Node* reversedList = reverse_linkedList(levelOrderList);
         return reversedList;
@@ -144,8 +180,8 @@ private:
 
     // Function reverse the given linked list.
     static Node* reverse_linkedList(Node* head){
-        if (head == nullptr) return nullptr;
-        Node* prev = nullptr; Node* curr = head; Node* next;
+        if (head == nullptr) {return nullptr;}
+        Node* prev = nullptr; Node* curr = head; Node* next = nullptr;
 
         while (curr != nullptr){
             next = curr->next;
@@ -160,7 +196,7 @@ private:
     // Function clears the linked list.
     // Sets all next pointers to nullptr.
     static void clearLinkedList(Node* head){
-        if (head == nullptr) return;
+        if (head == nullptr) {return;}
         clearLinkedList(head->next);
         head->next = nullptr;
     }
@@ -170,7 +206,7 @@ private:
     // Return in the end a linked list for iterations.
     // The returned pointer will be pointer to the head of the linked list.
     static Node* preorder(Node* root){
-        if (root == nullptr) return nullptr;
+        if (root == nullptr) {return nullptr;}
 
         Node* lst = root;
         stack<Node*> tmpS; // temporary stack to reverse children
@@ -203,10 +239,8 @@ public:
     class level_order_iterator{
     private:
         Node* ptr_to_curr_node;
-        Node* root;
     public:
-        explicit level_order_iterator(Node* root)
-        : root(root) {
+        explicit level_order_iterator(Node* root) {
             clearLinkedList(root);
             ptr_to_curr_node = level_order(root);
         }
@@ -231,12 +265,12 @@ public:
             return *this;
         }
 
-        // Postfix increment: iterator++;
-        const level_order_iterator operator++(int) {
-            level_order_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->next;
-            return tmp;
-        }
+        //        // Postfix increment: iterator++;
+        //        const level_order_iterator operator++(int) {
+        //            level_order_iterator tmp = *this;
+        //            ptr_to_curr_node = ptr_to_curr_node->next;
+        //            return tmp;
+        //        }
 
         bool operator==(const level_order_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
@@ -250,7 +284,6 @@ public:
     class reverse_level_order_iterator{
     private:
         Node* ptr_to_curr_node;
-        Node* _root;
     public:
         explicit reverse_level_order_iterator(Node* root) {
             clearLinkedList(root);
@@ -277,12 +310,12 @@ public:
             return *this;
         }
 
-        // Postfix increment: iterator++;
-        const reverse_level_order_iterator operator++(int) {
-            reverse_level_order_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->next;
-            return tmp;
-        }
+        //        // Postfix increment: iterator++;
+        //        const reverse_level_order_iterator operator++(int) {
+        //            reverse_level_order_iterator tmp = *this;
+        //            ptr_to_curr_node = ptr_to_curr_node->next;
+        //            return tmp;
+        //        }
 
         bool operator==(const reverse_level_order_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
@@ -296,7 +329,6 @@ public:
     class preorder_iterator{
     private:
         Node* ptr_to_curr_node;
-        Node* _root;
     public:
         explicit preorder_iterator(Node* root) {
             clearLinkedList(root);
@@ -323,12 +355,12 @@ public:
             return *this;
         }
 
-        // Postfix increment: ++iterator;
-        const preorder_iterator operator++(int) {
-            preorder_iterator tmp = *this;
-            ptr_to_curr_node = ptr_to_curr_node->next;
-            return tmp;
-        }
+        //        // Postfix increment: ++iterator;
+        //        const preorder_iterator operator++(int) {
+        //            preorder_iterator tmp = *this;
+        //            ptr_to_curr_node = ptr_to_curr_node->next;
+        //            return tmp;
+        //        }
 
         bool operator==(const preorder_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
