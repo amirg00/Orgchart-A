@@ -15,6 +15,15 @@ ariel::OrgChart& ariel::OrgChart::add_sub(const string &super, const string &sub
     return *this;
 }
 
+
+Tree<string>::level_order_iterator ariel::OrgChart::begin(){
+    return _chart.begin_level_order();
+}
+
+Tree<string>::level_order_iterator ariel::OrgChart::end() {
+    return _chart.end_level_order();
+}
+
 Tree<string>::level_order_iterator ariel::OrgChart::begin_level_order(){
     return _chart.begin_level_order();
 }
@@ -38,4 +47,5 @@ Tree<string>::preorder_iterator ariel::OrgChart::begin_preorder() {
 Tree<string>::preorder_iterator ariel::OrgChart::end_preorder() {
     return  _chart.end_preorder();
 }
+
 
