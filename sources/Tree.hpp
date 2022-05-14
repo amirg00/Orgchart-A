@@ -63,7 +63,7 @@ public:
     }
 
     // Returns tree's size.
-    int size(){
+    int size() const{
         return _size;
     }
 
@@ -82,7 +82,7 @@ public:
     string getTreeVisual(ostream& os) const {
         string tree_str;
         os << root->info << "\n";
-        printSubtree(root, tree_str, os);
+        visualSubtree(root, tree_str, os);
         return tree_str;
     }
 
@@ -91,7 +91,6 @@ public:
     Tree(Tree&& other) = delete; // move constructor
     Tree& operator=(const Tree& other) = delete; // copy assignment
     Tree& operator=(Tree&& other) = delete ;// move assignment
-
 private:
     // Node inner class
     struct Node{
@@ -265,7 +264,7 @@ private:
         return root;
     }
 
-    void printSubtree(Node* curr, const string &prefix, ostream& os) const{
+    void visualSubtree(Node* curr, const string &prefix, ostream& os) const{
         if (curr->children_size == 0) {return;}
         const string soleWorkerSign = "├── ";
         const string lastWorkerSign = "└── ";
@@ -281,11 +280,11 @@ private:
                 bool printStrand = size > 1 && curr->children_size != 0;
                 string newPrefix = prefix + (printStrand ? "│\t" : "\t");
                 os << child->info << "\n";
-                printSubtree(child, newPrefix, os);
-            } else {
+                visualSubtree(child, newPrefix, os);
+            } else { // Last child
                 os << (size > 1 ? prefix : "") << lastWorkerSign;
                 os << child->info << "\n";
-                printSubtree(child,prefix + "\t", os);
+                visualSubtree(child,prefix + "\t", os);
             }
         }
     }
