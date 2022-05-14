@@ -91,6 +91,7 @@ public:
     Tree(Tree&& other) = delete; // move constructor
     Tree& operator=(const Tree& other) = delete; // copy assignment
     Tree& operator=(Tree&& other) = delete ;// move assignment
+
 private:
     // Node inner class
     struct Node{
