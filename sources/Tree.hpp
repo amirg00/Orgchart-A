@@ -12,7 +12,8 @@
 #include "stack"
 #include "queue"
 #include "string"
-using std::queue; using std::stack; using std::string;
+#include <stdexcept>
+using std::queue; using std::stack; using std::string; using std::runtime_error; using std::ostream;
 //using std::cout; using std::endl; // For debugging - remove it!
 
 template <typename T>
@@ -39,9 +40,15 @@ public:
         Node* subNode = new Node(sub, nullptr, super_ref, nullptr);
         Node* sub_list = super_ref->sub;
 
+        if (super_ref == nullptr){
+            throw runtime_error("Superior element cannot be found!");
+        }
+
+
         // New sub element
         if (sub_list == nullptr){
             super_ref->sub = subNode;
+            super_ref->children_size++;
             _size++;
             return;
         }
@@ -50,6 +57,7 @@ public:
         while(sub_list->next_sib != nullptr){
             sub_list = sub_list->next_sib;
         }
+        super_ref->children_size++;
         sub_list->next_sib = subNode;
         _size++;
     }
@@ -59,50 +67,40 @@ public:
         return _size;
     }
 
-    /* Returns a string in a reasonable format, represents the current tree.
+    /* Puts a string in a reasonable format to the given output stream, which represents the current tree.
     For example:
        CEO
-       |--------|--------|
-       CTO      CFO      COO
-       |                 |
-       VP_SW             VP_BI
+        ├── CTO
+        │       └── VP_SW
+        ├── CFO
+        └── COO
+                └── VP_BI
     */
-    // Note: method performs level order traversal
+    // Note: method performs level order traversal with recursion,
     // in order to easily return a fair formatted string
-    // which represents the string.
-    string to_string() const {
-        if (root == nullptr) {return "";}
-        string tree_str = root->info + "\n";
-        Node* it = root;
-        queue<Node*> Q;
-        Q.push(root);
-        while(!Q.empty()){
-            Node* curr = Q.front();
-            Q.pop();
-            it->next = curr;
-            it = it->next;
-            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
-                tree_str += child->info + "\t";
-                Q.push(child);
-            }
-            tree_str+="\n";
-        }
+    // which visualizes the tree's levels.
+    string getTreeVisual(ostream& os) const {
+        string tree_str;
+        os << root->info << "\n";
+        printSubtree(root, tree_str, os);
         return tree_str;
     }
 
-private:
     // Avoid copying
-    Tree (const Tree& rhs) = default;
-    Tree& operator=(const Tree& rhs) = default;
-
+    Tree(const Tree &src) = default;
+    Tree(Tree&& other) = delete; // move constructor
+    Tree& operator=(const Tree& other) = delete; // copy assignment
+    Tree& operator=(Tree&& other) = delete ;// move assignment
+private:
     // Node inner class
     struct Node{
         T info;                 /* Node's value*/
+        int children_size;      /* node's Children amount*/
         Node* parent;           /* Parent's node*/
         Node* sub;              /* Current node's sub-entities list (points to first leftmost sub-entity)*/
         Node* next_sib;         /* Sub-entities' siblings list*/
         Node* next;             /* Next property for iterators*/
-        Node(const T& val, Node* node, Node* parNode, Node* sib): info(val), sub(node), parent(parNode), next_sib(sib), next(nullptr) {}
+        Node(const T& val, Node* node, Node* parNode, Node* sib): info(val), sub(node), parent(parNode), next_sib(sib), next(nullptr), children_size(0) {}
     };
 
     // Fields
@@ -114,7 +112,8 @@ private:
         return search(root, val);
     }
 
-    // Auxiliary recursive function for search
+    // Auxiliary recursive function for search a node
+    // which holds the given value
     Node* search(Node* ptr, const T& val){
         if (ptr->info == val){ /* Data corresponds the node's data*/
             return ptr;
@@ -123,7 +122,7 @@ private:
         Node* subList = ptr->sub;
         while (subList != nullptr){
             Node* currSub = search(subList, val);
-            if (currSub != nullptr){
+            if (currSub != nullptr){ /*Return first to be found*/
                 return currSub;
             }
             subList = subList->next_sib;
@@ -164,7 +163,43 @@ private:
                 Q.push(child);
             }
         }
+        it->next = nullptr; // override last's next in case such already exist
         return root;
+    }
+
+    // Reverse Level-order traversal: uses the same technique as the level order,
+    // with reversing the child's insertion order to the queue (right towards left) using stack.
+    // Return in the end a linked list for iterations.
+    // The returned pointer will be pointer to the head of the linked list.
+    static Node* reverse_level_order(Node* root){
+        if (root == nullptr) {return nullptr;}
+        queue<Node*> Q;
+        stack<Node*> S; stack<Node*> tmpS;
+        Q.push(root);
+        while(!Q.empty()){
+            Node* curr = Q.front();
+            Q.pop();
+            S.push(curr); // Push stack for reverse level order
+            for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
+                tmpS.push(child);
+            }
+            // Insert children in inverse order (right towards left).
+            while(!tmpS.empty()){
+                Q.push(tmpS.top());
+                tmpS.pop();
+            }
+        }
+        // Return a linked list contains the nodes of the traversal
+        Node* it = S.top();
+        S.pop();
+        Node* curr = it;
+        while(!S.empty()){
+            curr->next = S.top();
+            curr = curr->next;
+            S.pop();
+        }
+        curr->next = nullptr; // override last's next in case such already exist
+        return it;
     }
 
     // Reverse-order traversal: the reverse oder of the
@@ -217,7 +252,7 @@ private:
             stack.pop();
             lst->next = curr;
             lst = lst->next;
-            curr->next = nullptr;
+            curr->next = nullptr; // override next in case such already exist
             for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
                 tmpS.push(child);
             }
@@ -227,6 +262,31 @@ private:
             }
         }
         return root;
+    }
+
+    void printSubtree(Node* curr, const string &prefix, ostream& os) const{
+        if (curr->children_size == 0) {return;}
+        const string soleWorkerSign = "├── ";
+        const string lastWorkerSign = "└── ";
+        os << prefix;
+        int size = curr->children_size;
+        os << (size > 1 ? soleWorkerSign : "");
+        int cnt = 0;
+        for (Node* child = curr->sub; child != nullptr; child = child->next_sib, cnt++) {
+            if (cnt < size - 1) {
+                if (cnt > 0) {
+                    os << prefix << soleWorkerSign;
+                }
+                bool printStrand = size > 1 && curr->children_size != 0;
+                string newPrefix = prefix + (printStrand ? "│\t" : "\t");
+                os << child->info << "\n";
+                printSubtree(child, newPrefix, os);
+            } else {
+                os << (size > 1 ? prefix : "") << lastWorkerSign;
+                os << child->info << "\n";
+                printSubtree(child,prefix + "\t", os);
+            }
+        }
     }
 
     //-------------------------------------------------------------------
@@ -240,9 +300,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit level_order_iterator(Node* root) {
-            clearLinkedList(root);
-            ptr_to_curr_node = level_order(root);
+        explicit level_order_iterator(Node* root)
+        :ptr_to_curr_node(level_order(root)){
         }
 
         // Note that the method is const as this operator does not
@@ -285,9 +344,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit reverse_level_order_iterator(Node* root) {
-            clearLinkedList(root);
-            ptr_to_curr_node = reverse_order(root);
+        explicit reverse_level_order_iterator(Node* root)
+        :ptr_to_curr_node(reverse_level_order(root)){
         }
 
         // Note that the method is const as this operator does not
@@ -330,9 +388,8 @@ public:
     private:
         Node* ptr_to_curr_node;
     public:
-        explicit preorder_iterator(Node* root) {
-            clearLinkedList(root);
-            ptr_to_curr_node = preorder(root);
+        explicit preorder_iterator(Node* root)
+        : ptr_to_curr_node(preorder(root)){
         }
 
         // Note that the method is const as this operator does not
