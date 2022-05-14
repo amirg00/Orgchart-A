@@ -26,6 +26,6 @@ namespace ariel{
         Tree<string>::reverse_level_order_iterator end_reverse_order();
         Tree<string>::preorder_iterator begin_preorder();
         Tree<string>::preorder_iterator end_preorder();
-        string to_string() const;
+        string to_string(ostream& os) const;
     };
 }
