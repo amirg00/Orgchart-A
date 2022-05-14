@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Tree.hpp"
 
-using std::ostream; using std::string;
+using std::ostream; using std::string; using std::invalid_argument;
 
 namespace ariel{
     class OrgChart {

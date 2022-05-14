@@ -35,7 +35,7 @@ int main() {
     {
         cout << (*it) << " " ;
     } // prints: CEO CTO CFO COO VP_SW VP_BI
-    for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it)
+    for (auto it = organization.begin_reverse_order(); it != organization.end_reverse_order(); ++it)
     {
         cout << (*it) << " " ;
     } // prints: VP_SW VP_BI CTO CFO COO CEO
@@ -43,7 +43,7 @@ int main() {
         cout << (*it) << " " ;
     }  // prints: CEO CTO VP_SW CFO COO VP_BI
 
-    for (int element: tree_of_ints) {  // this should work like level order
+    for (auto element: organization) {  // this should work like level order
         cout << element << " " ;
     } // prints: CEO CTO CFO COO VP_SW VP_BI
 

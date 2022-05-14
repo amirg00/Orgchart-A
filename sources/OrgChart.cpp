@@ -7,11 +7,17 @@ ostream& ariel::operator<<(ostream &os, const OrgChart &chart) {
 }
 
 OrgChart& OrgChart::add_root(const string &root_val) {
+    if (root_val.empty()){
+        throw invalid_argument("You cannot add null root!");
+    }
     _chart.add_root(root_val);
     return *this;
 }
 
 OrgChart& OrgChart::add_sub(const string &super, const string &sub) {
+    if (super.empty() || sub.empty()){
+        throw invalid_argument("Invalid super value or sub!");
+    }
     _chart.add_sub(super, sub);
     return *this;
 }

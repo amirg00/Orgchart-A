@@ -11,9 +11,28 @@ using std::string; using std::vector; using std::cout; using std::endl;
 string getRandWorker();
 
 
+
+TEST_CASE("Iterators Operations"){
+
+}
+
 // Cases in which an exception should be thrown.
 TEST_CASE("Exceptional cases"){
+    OrgChart organization;
 
+    /*Add blank root name*/
+    CHECK_THROWS(organization.add_root(""));
+
+    /*Add blank sub name*/
+    CHECK_NOTHROW(organization.add_root("A"));
+    CHECK_THROWS(organization.add_sub("A", ""));
+
+    /*Add blank superior name*/
+    CHECK_THROWS(organization.add_sub("", "D"));
+
+    /*Superior element cannot be found*/
+    CHECK_NOTHROW(organization.add_sub("A", "B"));
+    CHECK_THROWS(organization.add_sub("C", "D"));
 }
 
 // Make a big random organization to check performances,
@@ -24,12 +43,13 @@ TEST_CASE("Random Organization"){
     srand(time(0)); /* Make a random generator*/
     vector<string> workers;
     int workersAmount = 3;
+    // First workers creation
     for (unsigned long i = 0; i < workersAmount; ++i) {
         string randWorker = getRandWorker();
         CHECK_NOTHROW(organization.add_sub("A", randWorker));
         workers.push_back(randWorker);
     }
-
+    // All other 100 workers in organization
     for (unsigned long j = 0; j < 100; ++j) {
         string randWorker = getRandWorker();
         unsigned long randPos = (unsigned long)(rand()) % workers.size();

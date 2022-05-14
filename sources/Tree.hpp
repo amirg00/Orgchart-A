@@ -37,13 +37,12 @@ public:
     // Method adds the sub element under the super given element.
     void add_sub(const T& super, const T& sub){
         Node* super_ref = search(super);
-        Node* subNode = new Node(sub, nullptr, super_ref, nullptr);
-        Node* sub_list = super_ref->sub;
-
         if (super_ref == nullptr){
             throw runtime_error("Superior element cannot be found!");
         }
 
+        Node* subNode = new Node(sub, nullptr, super_ref, nullptr);
+        Node* sub_list = super_ref->sub;
 
         // New sub element
         if (sub_list == nullptr){
@@ -91,6 +90,7 @@ public:
     Tree(Tree&& other) = delete; // move constructor
     Tree& operator=(const Tree& other) = delete; // copy assignment
     Tree& operator=(Tree&& other) = delete ;// move assignment
+
 private:
     // Node inner class
     struct Node{
@@ -118,7 +118,6 @@ private:
         if (ptr->info == val){ /* Data corresponds the node's data*/
             return ptr;
         }
-
         Node* subList = ptr->sub;
         while (subList != nullptr){
             Node* currSub = search(subList, val);
@@ -127,7 +126,6 @@ private:
             }
             subList = subList->next_sib;
         }
-
         return nullptr;
     }
     //-------------------------------------------------------------------
