@@ -2,7 +2,7 @@
 using namespace ariel;
 
 ostream& ariel::operator<<(ostream &os, const OrgChart &chart) {
-    os << chart.to_string();
+    os << chart.to_string(os);
     return os;
 }
 
@@ -15,7 +15,6 @@ OrgChart& OrgChart::add_sub(const string &super, const string &sub) {
     _chart.add_sub(super, sub);
     return *this;
 }
-
 
 Tree<string>::level_order_iterator OrgChart::begin(){
     return _chart.begin_level_order();
@@ -49,8 +48,6 @@ Tree<string>::preorder_iterator OrgChart::end_preorder() {
     return  _chart.end_preorder();
 }
 
-string OrgChart::to_string() const {
-    return _chart.to_string();
+string OrgChart::to_string(ostream& os) const {
+    return _chart.getTreeVisual(os);
 }
-
-
