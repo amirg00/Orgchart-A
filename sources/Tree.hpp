@@ -202,40 +202,6 @@ private:
         return it;
     }
 
-    // Reverse-order traversal: the reverse oder of the
-    // level-order traversal which can be shown above.
-    // Return in the end a linked list for iterations.
-    // The returned pointer will be pointer to the head of the linked list.
-    static Node* reverse_order(Node* root){
-        if (root == nullptr) {return nullptr;}
-        Node* levelOrderList = level_order(root);
-        Node* reversedList = reverse_linkedList(levelOrderList);
-        return reversedList;
-    }
-
-    // Function reverse the given linked list.
-    static Node* reverse_linkedList(Node* head){
-        if (head == nullptr) {return nullptr;}
-        Node* prev = nullptr; Node* curr = head; Node* next = nullptr;
-
-        while (curr != nullptr){
-            next = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = next;
-        }
-        head = prev;
-        return head;
-    }
-
-    // Function clears the linked list.
-    // Sets all next pointers to nullptr.
-    static void clearLinkedList(Node* head){
-        if (head == nullptr) {return;}
-        clearLinkedList(head->next);
-        head->next = nullptr;
-    }
-
     // Preorder traversal: performs the preorder traversal
     // for a non-binary tree.
     // Return in the end a linked list for iterations.
