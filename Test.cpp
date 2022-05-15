@@ -110,6 +110,10 @@ TEST_CASE("Exceptional cases"){
     /*Superior element cannot be found*/
     CHECK_NOTHROW(organization.add_sub("A", "B"));
     CHECK_THROWS(organization.add_sub("C", "D"));
+
+    /*Root already exist*/
+    CHECK_THROWS(organization.add_root("A"));
+    CHECK_THROWS(organization.add_root("F"));
 }
 
 // Make a big random organization to check performances,

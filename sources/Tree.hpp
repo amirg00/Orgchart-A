@@ -5,7 +5,7 @@
  *
  * @author Amir Gillette
  * @since 6-5-22
- * -----------------------------------------
+ * ----------------------------------------
  */
 
 #pragma once
@@ -13,7 +13,7 @@
 #include "queue"
 #include "string"
 #include <stdexcept>
-using std::queue; using std::stack; using std::string; using std::runtime_error; using std::ostream;
+using std::queue; using std::stack; using std::string; using std::runtime_error; using std::invalid_argument; using std::ostream;
 
 template <typename T>
 class Tree{
@@ -29,6 +29,9 @@ public:
 
     // Method adds the root with a given value
     void add_root(const T& val) {
+        if(root != nullptr){
+            throw invalid_argument("Root already exist!");
+        }
         root = new Node(val, nullptr, nullptr, nullptr);
         _size++;
     }
