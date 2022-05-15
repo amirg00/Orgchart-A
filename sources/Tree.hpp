@@ -218,6 +218,7 @@ private:
             for (Node* child = curr->sub; child != nullptr; child = child->next_sib) {
                 tmpS.push(child);
             }
+            // Reverse child order with the temporary stack
             while(!tmpS.empty()){
                 stack.push(tmpS.top());
                 tmpS.pop();
