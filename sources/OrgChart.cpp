@@ -47,7 +47,7 @@ Tree<string>::reverse_level_order_iterator OrgChart::begin_reverse_order() {
     return _chart.begin_reverse_order();
 }
 
-Tree<string>::reverse_level_order_iterator OrgChart::end_reverse_order() {
+Tree<string>::reverse_level_order_iterator OrgChart::reverse_order() {
     return  _chart.end_reverse_order();
 }
 

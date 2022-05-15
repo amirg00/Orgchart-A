@@ -49,7 +49,7 @@ TEST_CASE("Iterators Operations"){
     CHECK((*it2) == "EEE");
     CHECK(it2->size() == 3);
     CHECK(it2 == it2);
-    CHECK(it2 != organization.end_reverse_order());
+    CHECK(it2 != organization.reverse_order());
 
     // LEVEL ORDER //
     auto it3 = organization.begin_preorder();
@@ -85,7 +85,7 @@ TEST_CASE("Iterators Operations"){
     }
 
     cnt = 0; // reset counter
-    for (auto iter = organization.begin_reverse_order(); iter != organization.end_reverse_order(); ++iter)
+    for (auto iter = organization.begin_reverse_order(); iter != organization.reverse_order(); ++iter)
     {
         CHECK((*iter) == ReverseLevelOrder[cnt++]);
     }
@@ -156,7 +156,7 @@ TEST_CASE("Random Organization"){
         CHECK_NOTHROW(cout << (*it) << " ");
     }
     cout << endl;
-    for (auto it = organization.begin_reverse_order(); it != organization.end_reverse_order(); ++it)
+    for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it)
     {
         CHECK_NOTHROW(cout << (*it) << " ");
     }
