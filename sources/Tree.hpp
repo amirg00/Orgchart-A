@@ -77,11 +77,10 @@ public:
     // Note: method performs level order traversal with recursion,
     // in order to easily return a fair formatted string
     // which visualizes the tree's levels.
-    string getTreeVisual(ostream& os) const {
+    void getTreeVisual(ostream& os) const {
         string tree_str;
         os << root->info << "\n";
         visualSubtree(root, tree_str, os);
-        return tree_str;
     }
 
     // Avoid copying
