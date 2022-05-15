@@ -14,7 +14,6 @@
 #include "string"
 #include <stdexcept>
 using std::queue; using std::stack; using std::string; using std::runtime_error; using std::ostream;
-//using std::cout; using std::endl; // For debugging - remove it!
 
 template <typename T>
 class Tree{
