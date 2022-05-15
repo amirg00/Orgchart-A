@@ -29,8 +29,8 @@ public:
 
     // Method adds the root with a given value
     void add_root(const T& val) {
-        if(root != nullptr){
-            throw invalid_argument("Root already exist!");
+        if(root != nullptr){ // replace existed root by given root's value
+            root->info = val;
         }
         root = new Node(val, nullptr, nullptr, nullptr);
         _size++;

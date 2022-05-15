@@ -118,9 +118,12 @@ TEST_CASE("Exceptional cases"){
     CHECK_NOTHROW(organization.add_sub("A", "B"));
     CHECK_THROWS(organization.add_sub("C", "D"));
 
-    /*Root already exist*/
-    CHECK_THROWS(organization.add_root("A"));
-    CHECK_THROWS(organization.add_root("F"));
+    /*Root already exist - replace/override root*/
+    CHECK_NOTHROW(organization.add_root("H")); // OVERRIDE 'A'
+    auto it = organization.begin_level_order();
+    CHECK((*it) == "H");
+    CHECK_NOTHROW(organization.add_root("F")); // OVERRIDE 'H'
+    CHECK((*it) == "F");
 }
 
 // Make a big random organization to check performances,
