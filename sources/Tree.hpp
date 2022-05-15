@@ -31,6 +31,7 @@ public:
     void add_root(const T& val) {
         if(root != nullptr){ // replace existed root by given root's value
             root->info = val;
+             return;
         }
         root = new Node(val, nullptr, nullptr, nullptr);
         _size++;
