@@ -283,17 +283,16 @@ public:
 
         // Prefix increment: ++iterator;
         level_order_iterator& operator++() {
-            //++pointer_to_current_node;
             ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
 
-        //        // Postfix increment: iterator++;
-        //        const level_order_iterator operator++(int) {
-        //            level_order_iterator tmp = *this;
-        //            ptr_to_curr_node = ptr_to_curr_node->next;
-        //            return tmp;
-        //        }
+        // Postfix increment: iterator++;
+        level_order_iterator operator++(int) {
+            level_order_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->next;
+            return tmp;
+        }
 
         bool operator==(const level_order_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
@@ -327,17 +326,16 @@ public:
 
         // Prefix increment: ++iterator;
         reverse_level_order_iterator& operator++() {
-            //++pointer_to_current_node;
             ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
 
-        //        // Postfix increment: iterator++;
-        //        const reverse_level_order_iterator operator++(int) {
-        //            reverse_level_order_iterator tmp = *this;
-        //            ptr_to_curr_node = ptr_to_curr_node->next;
-        //            return tmp;
-        //        }
+        // Postfix increment: iterator++;
+        reverse_level_order_iterator operator++(int) {
+            reverse_level_order_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->next;
+            return tmp;
+        }
 
         bool operator==(const reverse_level_order_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
@@ -376,12 +374,12 @@ public:
             return *this;
         }
 
-        //        // Postfix increment: ++iterator;
-        //        const preorder_iterator operator++(int) {
-        //            preorder_iterator tmp = *this;
-        //            ptr_to_curr_node = ptr_to_curr_node->next;
-        //            return tmp;
-        //        }
+        // Postfix increment: ++iterator;
+        preorder_iterator operator++(int) {
+            preorder_iterator tmp = *this;
+            ptr_to_curr_node = ptr_to_curr_node->next;
+            return tmp;
+        }
 
         bool operator==(const preorder_iterator& rhs) const {
             return ptr_to_curr_node == rhs.ptr_to_curr_node;
