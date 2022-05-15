@@ -268,11 +268,11 @@ public:
         :ptr_to_curr_node(level_order(root)){
         }
 
-        // Note that the method is const as this operator does not
+        // Note: the method is const as this operator does not
         // allow changing of the iterator.
-        // Note that it returns T& as it allows changing what it points to.
-        // A const_iterator class will return const T&
-        // and the method will still be const
+        // Note: method returns T& as it allows changing what it points to.
+        // A level_order_iterator class will return const T&
+        // and the method will still be const.
         T& operator*() const {
             return ptr_to_curr_node->info;
         }
@@ -311,11 +311,11 @@ public:
         :ptr_to_curr_node(reverse_level_order(root)){
         }
 
-        // Note that the method is const as this operator does not
+        // Note: the method is const as this operator does not
         // allow changing of the iterator.
-        // Note that it returns T& as it allows changing what it points to.
-        // A const_iterator class will return const T&
-        // and the method will still be const
+        // Note: method returns T& as it allows changing what it points to.
+        // A reverse_level_order_iterator class will return const T&
+        // and the method will still be const.
         T& operator*() const {
             return ptr_to_curr_node->info;
         }
@@ -354,11 +354,11 @@ public:
         : ptr_to_curr_node(preorder(root)){
         }
 
-        // Note that the method is const as this operator does not
+        // Note: the method is const as this operator does not
         // allow changing of the iterator.
-        // Note that it returns T& as it allows changing what it points to.
-        // A const_iterator class will return const T&
-        // and the method will still be const
+        // Note: method returns T& as it allows changing what it points to.
+        // A preorder_iterator class will return const T&
+        // and the method will still be const.
         T& operator*() const {
             return ptr_to_curr_node->info;
         }
@@ -369,7 +369,6 @@ public:
 
         // Prefix increment: ++iterator;
         preorder_iterator& operator++() {
-            //++pointer_to_current_node;
             ptr_to_curr_node = ptr_to_curr_node->next;
             return *this;
         }
