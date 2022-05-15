@@ -10,8 +10,8 @@ using std::string; using std::vector; using std::cout; using std::endl;
 
 string getRandWorker();
 
-
-
+// Check for iterators' operators: check their correctness for traversals
+// and check to make sure iterators have all needed operators.
 TEST_CASE("Iterators Operations"){
     OrgChart organization;
     CHECK_NOTHROW(organization.add_root("AAA")
@@ -93,7 +93,7 @@ TEST_CASE("Iterators Operations"){
     }
 }
 
-// Cases in which an exception should be thrown.
+// Test cases in which an exception should be thrown.
 TEST_CASE("Exceptional cases"){
     OrgChart organization;
 
@@ -120,6 +120,7 @@ TEST_CASE("Random Organization"){
     srand(time(0)); /* Make a random generator*/
     vector<string> workers;
     int workersAmount = 3;
+
     // First workers creation
     for (unsigned long i = 0; i < workersAmount; ++i) {
         string randWorker = getRandWorker();
@@ -133,8 +134,9 @@ TEST_CASE("Random Organization"){
         CHECK_NOTHROW(organization.add_sub(workers[randPos], randWorker));
         workers.push_back(randWorker);
     }
-
     cout << organization << endl;
+
+    // Iterators check stability with big organization
     for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it)
     {
         CHECK_NOTHROW(cout << (*it) << " ");
