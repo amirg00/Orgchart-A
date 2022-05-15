@@ -71,6 +71,10 @@ TEST_CASE("Iterators Operations"){
     for (const auto& levelElement: organization){
         CHECK(levelElement == levelOrder[cnt++]);
     }
+    cnt = 0;
+    for (const string& levelElement: organization){ //Exactly the same
+        CHECK(levelElement == levelOrder[cnt++]);
+    }
 
     // Test again level order to see if it still works
     // with the original approach.
