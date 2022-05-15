@@ -51,7 +51,7 @@ public:
             return;
         }
 
-        // O.W
+        // O.W: add the node as last child
         while(sub_list->next_sib != nullptr){
             sub_list = sub_list->next_sib;
         }
@@ -204,7 +204,6 @@ private:
     // The returned pointer will be pointer to the head of the linked list.
     static Node* preorder(Node* root){
         if (root == nullptr) {return nullptr;}
-
         Node* lst = root;
         stack<Node*> tmpS; // temporary stack to reverse children
         stack<Node*> stack;
@@ -227,16 +226,18 @@ private:
         return root;
     }
 
+    // Method performs level order traversal with recursion,
+    // in order to easily return a fair formatted string
+    // which visualizes the tree's levels.
     void visualSubtree(Node* curr, const string &prefix, ostream& os) const{
         if (curr->children_size == 0) {return;}
-        const string soleWorkerSign = "├── ";
-        const string lastWorkerSign = "└── ";
+        const string soleWorkerSign = "├── "; const string lastWorkerSign = "└── ";
         os << prefix;
         int size = curr->children_size;
         os << (size > 1 ? soleWorkerSign : "");
         int cnt = 0;
         for (Node* child = curr->sub; child != nullptr; child = child->next_sib, cnt++) {
-            if (cnt < size - 1) {
+            if (cnt < size - 1) { // It isn't the last child
                 if (cnt > 0) {
                     os << prefix << soleWorkerSign;
                 }
