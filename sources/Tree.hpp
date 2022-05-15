@@ -38,6 +38,10 @@ public:
 
     // Method adds the sub element under the super given element.
     void add_sub(const T& super, const T& sub){
+        if (root == nullptr){
+            throw invalid_argument("Root doesn't exist!");
+        }
+
         Node* super_ref = search(super);
         if (super_ref == nullptr){
             throw runtime_error("Superior element cannot be found!");

@@ -97,6 +97,9 @@ TEST_CASE("Iterators Operations"){
 TEST_CASE("Exceptional cases"){
     OrgChart organization;
 
+    /*Add sub entity before adding a root entity*/
+    CHECK_THROWS(organization.add_sub("A", "B"));
+
     /*Add blank root name*/
     CHECK_THROWS(organization.add_root(""));
 
